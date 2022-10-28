@@ -1,10 +1,20 @@
 version: '3'
 
 services:
-  with-docker-multi-env-development:
+  app:
     build:
       context: ../../
       dockerfile: docker/development/Dockerfile
-    image: with-docker-multi-env-development
+      target: runner
+    image: app
     ports:
       - '3001:3000'
+
+  docs:
+    build:
+      context: ../../
+      dockerfile: docker/development/Dockerfile
+      target: docs
+    image: docs
+    ports:
+      - '6006:6006'

@@ -7,6 +7,7 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
@@ -21,9 +22,22 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # This will do the trick, use the corresponding env file for each environment.
 COPY .env.development.sample .env.production
+RUN yarn build-storybook
 RUN yarn build
 
-# 3. Production image, copy all the files and run next
+# 3. Documentation image, copy storybook-static/ and run storybook
+FROM nginx:1.15 AS docs
+WORKDIR /app
+
+COPY --from=builder /app/storybook-static ./
+
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 6006
+
+CMD ["/bin/bash", "-c", "exec nginx -g 'daemon off;'"]
+
+# 4. Production image, copy all the files and run next
 FROM node:16-alpine AS runner
 WORKDIR /app
 
@@ -47,3 +61,4 @@ EXPOSE 3000
 ENV PORT 3000
 
 CMD ["node", "server.js"]
+

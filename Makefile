@@ -10,6 +10,10 @@ start-development: ## Start the development docker container.
 stop-development: ## Stop the development docker container.
 	docker compose -f docker/development/docker-compose.yml down
 
+.PHONY: restart-development
+restart-development: ## Restart the development docker container.
+	make stop-development && make build-development && make start-development
+
 .PHONY: build-staging
 build-staging: ## Build the staging docker image.
 	docker compose -f docker/staging/docker-compose.yml build
