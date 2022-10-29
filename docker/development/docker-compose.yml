@@ -1,20 +1,28 @@
 version: '3'
 
 services:
-  app:
+  nextjs-app:
     build:
       context: ../../
       dockerfile: docker/development/Dockerfile
       target: runner
-    image: app
+    image: nextjs-app
+    volumes:
+      - ../../:/app
+      - /app/node_modules
+      - /app/.next
     ports:
       - '3001:3000'
 
-  docs:
+  nextjs-docs:
     build:
       context: ../../
       dockerfile: docker/development/Dockerfile
       target: docs
-    image: docs
+    image: nextjs-docs
+    volumes:
+      - ../../:/app
+      - /app/node_modules
+      - /app/.next
     ports:
-      - '6006:6006'
+      - '6001:6006'
