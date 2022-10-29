@@ -36,6 +36,6 @@ jobs:
           file: ./docker/production/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ secrest.DOCKER_HUB_USERNAME }}/nextjs-whitelabel:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nextjs-whitelabel:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/nextjs-whitelabel:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/nextjs-whitelabel:buildcache,mode=max
